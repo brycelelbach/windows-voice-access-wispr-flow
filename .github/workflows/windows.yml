@@ -1,0 +1,16 @@
+name: Windows release build
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Reproduce release executable and exercise setup
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          .\build.ps1
+          .\tests\install-test.ps1 -ExerciseProcess
+          python tests/snippets-test.py
